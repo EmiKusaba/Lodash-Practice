@@ -1,67 +1,66 @@
 // import {chunk, reverse, without, shuffle, pebbles} from 'lodash';
-let assert = require('assert');
-const _ = require('lodash');
-const fetch = require('node-fetch')
-const getPokemonNames = (offset = 0, num = 6) => {
-  fetch(`https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${num}/`)
-    .then(res => {
-      if (!res.ok) {
-        throw Error(res.statusText);
-      }
-      return res.json();
-    })
-    .then(data => {
-      // console.log('data', data)
+let assert = require("assert");
+const _ = require("lodash");
 
-      // For each pokemon, get more data about it from API
-      // _.reverse(data)
-      const reverse = _.reverse(data.results)
-      return reverse
-      // const chunk = _.chunk(data.results, 2)
-      // console.log(chunk)
-      // const without = _.without(data.results, "name")
-      // console.log(without)
-      // const shuffle = _.shuffle(data.results)
-      // console.log(shuffle)
-      // const pebbles = _.pebbles(data.results)
-      // getPokemonData(pokemon);
-      // arrayOfPokemon.push(pokemon)
-    })
-    .catch(err => console.log(`Error,  ${err}`));
+const getPokemonNames = () => {
+  return ["venusaur", "charizard", "blastoise", "dragonite", "mewtwo", "mew"];
 };
-getPokemonNames();
 
+if (typeof describe === "function") {
+  const equal = (a, b) => {
+    const aIsArray = Array.isArray(a);
+    const bIsArray = Array.isArray(b);
+    if (!aIsArray && !bIsArray) {
+      // Not arrays, just compare using '==='
+      return a === b;
+    } else if (aIsArray !== bIsArray) {
+      // One is an array and the other isn't, so they are not equal
+      return false;
+    }
 
-//Unit tests
-if (typeof describe === 'function') {
-  // describe('getPokemonNames', function () {
-    // it('Correct url', () => {
-    //   const fakeFetch = (url) => {
-    //     assert.equal('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=6/', url);
-    //     return new Promise(() => { });
-    //   };
-    //   getPokemonNames(fakeFetch, 0, 6);
-    // });
-
-    describe('reverse', function () {
-      it("should return array of reverse", () => {
-        assert.equal([ { name: 'charizard',
-        url: 'https://pokeapi.co/api/v2/pokemon/6/' },
-      { name: 'charmeleon',
-        url: 'https://pokeapi.co/api/v2/pokemon/5/' },
-      { name: 'charmander',
-        url: 'https://pokeapi.co/api/v2/pokemon/4/' },
-      { name: 'venusaur',
-        url: 'https://pokeapi.co/api/v2/pokemon/3/' },
-      { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
-      { name: 'bulbasaur',
-        url: 'https://pokeapi.co/api/v2/pokemon/1/' } ])
-      });
+    // Otherwise, they are both arrays
+    if (a.length !== b.length) {
+      return false;
+    }
+    return a.every((x, i) => {
+      // Recursively compare elements of a, b
+      return equal(x, b[i]);
     });
+  };
 
-    // describe('chunk', function () {
-    //   it("chunk 2", () => {
-    //     assert.equal("left", battle(mew, rattata));
-    //   });
-    // });
+  describe("reverse", function () {
+    it("basic", () => {
+      assert(equal(["mew", "mewtwo", "dragonite", "blastoise", "charizard", "venusaur"],
+        _.reverse(getPokemonNames())));
+    });
+  });
+
+  describe("chunk", function () {
+    it("basic", () => {
+      assert(equal([["venusaur", "charizard"], ["blastoise", "dragonite"], ["mewtwo", "mew"]],
+        _.chunk(getPokemonNames(), 2)));
+    });
+  });
+
+  describe("without", function () {
+    it("basic", () => {
+      assert(equal(["venusaur", "blastoise", "dragonite", "mewtwo"],
+        _.without(getPokemonNames(), "charizard", "mew")));
+    });
+  });
+
+  describe("shuffle", function () {
+    it("basic", () => {
+      // Just make sure they are not the same
+      assert(!equal(["venusaur", "charizard", "blastoise", "dragonite", "mewtwo", "mew"],
+        _.shuffle(getPokemonNames())));
+    });
+  });
+
+  // what is pebbles?!
+  describe("pebbles", function () {
+    it("basic", () => {
+
+    });
+  });
 }
