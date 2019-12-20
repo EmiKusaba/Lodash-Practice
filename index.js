@@ -58,9 +58,11 @@ if (typeof describe === "function") {
   });
 
   // what is pebbles?!
-  describe("pebbles", function () {
+  describe("difference", function () {
     it("basic", () => {
-
+      //check the difference
+      assert(!equal(["venusaur", "charizard", "blastoise"],["venusaur", "charizard"],
+        _.difference(getPokemonNames()["blastoise"])));
     });
   });
 }
